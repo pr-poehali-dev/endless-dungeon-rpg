@@ -6,6 +6,10 @@ export type ItemType = "sword" | "staff" | "leather_armor" | "cloth_armor";
 export type GameState = "menu" | "character_select" | "game";
 export type GameTab = "combat" | "inventory" | "stats";
 
+export interface GameSettings {
+  godMode: boolean;
+}
+
 export interface Player {
   name: string;
   class: PlayerClass;

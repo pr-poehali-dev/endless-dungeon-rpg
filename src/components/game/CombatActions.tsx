@@ -8,6 +8,7 @@ import { GAME_CONSTANTS } from "@/constants/gameData";
 interface CombatActionsProps {
   player: Player;
   currentEnemy: Enemy | null;
+  isGodMode: boolean;
   onPlayerAttack: () => void;
   onChainLightning: () => void;
   onRestart: () => void;
@@ -16,13 +17,15 @@ interface CombatActionsProps {
 export const CombatActions: React.FC<CombatActionsProps> = ({
   player,
   currentEnemy,
+  isGodMode,
   onPlayerAttack,
   onChainLightning,
   onRestart,
 }) => {
   const isPlayerAlive = player.health > 0;
   const isEnemyAlive = currentEnemy && currentEnemy.health > 0;
-  const canUseMagic = player.mana >= GAME_CONSTANTS.CHAIN_LIGHTNING_COST;
+  const canUseMagic =
+    isGodMode || player.mana >= GAME_CONSTANTS.CHAIN_LIGHTNING_COST;
 
   return (
     <Card className="bg-slate-800 border-slate-700">
@@ -46,11 +49,20 @@ export const CombatActions: React.FC<CombatActionsProps> = ({
                 <Button
                   onClick={onChainLightning}
                   disabled={!canUseMagic}
-                  className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-slate-600"
+                  className={`
+                    ${
+                      isGodMode
+                        ? "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-lg"
+                        : "bg-blue-600 hover:bg-blue-700"
+                    } 
+                    text-white disabled:bg-slate-600
+                  `}
                   size="lg"
                 >
                   <Icon name="Zap" size={20} className="mr-2" />
-                  Молния ({GAME_CONSTANTS.CHAIN_LIGHTNING_COST} маны)
+                  {isGodMode
+                    ? "⚡БОЖЕСТВЕННАЯ МОЛНИЯ⚡"
+                    : `Молния (${GAME_CONSTANTS.CHAIN_LIGHTNING_COST} маны)`}
                 </Button>
               )}
             </div>

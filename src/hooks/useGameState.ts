@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { GameState, Player, Enemy, PlayerClass } from "@/types/game";
+import {
+  GameState,
+  Player,
+  Enemy,
+  PlayerClass,
+  GameSettings,
+} from "@/types/game";
 import { CLASS_BASE_STATS } from "@/constants/gameData";
 
 export const useGameState = () => {
@@ -8,6 +14,9 @@ export const useGameState = () => {
   const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
   const [dungeonLevel, setDungeonLevel] = useState(1);
   const [battleLog, setBattleLog] = useState<string[]>([]);
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
+    godMode: false,
+  });
 
   const createCharacter = (playerClass: PlayerClass) => {
     const baseStats = CLASS_BASE_STATS[playerClass];
@@ -41,6 +50,14 @@ export const useGameState = () => {
     setBattleLog([]);
   };
 
+  const toggleGodMode = () => {
+    setGameSettings((prev) => ({ ...prev, godMode: !prev.godMode }));
+    setBattleLog((prev) => [
+      ...prev,
+      `Режим бога ${!gameSettings.godMode ? "ВКЛЮЧЕН" : "ВЫКЛЮЧЕН"}! 🔥`,
+    ]);
+  };
+
   return {
     // State
     gameState,
@@ -48,6 +65,7 @@ export const useGameState = () => {
     currentEnemy,
     dungeonLevel,
     battleLog,
+    gameSettings,
 
     // Actions
     setGameState,
@@ -57,5 +75,6 @@ export const useGameState = () => {
     setBattleLog,
     createCharacter,
     resetGame,
+    toggleGodMode,
   };
 };

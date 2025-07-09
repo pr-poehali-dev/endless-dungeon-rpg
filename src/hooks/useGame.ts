@@ -56,6 +56,7 @@ export const useGame = () => {
     const lightningResult = combat.performChainLightning(
       gameState.player,
       gameState.currentEnemy,
+      gameState.gameSettings.godMode,
     );
 
     if (!lightningResult) return;
@@ -71,10 +72,11 @@ export const useGame = () => {
       health: lightningResult.newEnemyHealth,
     });
 
-    gameState.setBattleLog((prev) => [
-      ...prev,
-      `Цепная молния нанесла ${lightningResult.damage} урона!`,
-    ]);
+    const damageText = gameState.gameSettings.godMode
+      ? `БОЖЕСТВЕННАЯ молния испепелила врага! ${lightningResult.damage} урона! ⚡🔥`
+      : `Цепная молния нанесла ${lightningResult.damage} урона!`;
+
+    gameState.setBattleLog((prev) => [...prev, damageText]);
 
     if (lightningResult.isEnemyDefeated) {
       handleEnemyDefeated();
@@ -145,6 +147,7 @@ export const useGame = () => {
     const attackResult = combat.performEnemyAttack(
       gameState.currentEnemy,
       gameState.player,
+      gameState.gameSettings.godMode,
     );
 
     gameState.setPlayer({
@@ -152,10 +155,11 @@ export const useGame = () => {
       health: attackResult.newPlayerHealth,
     });
 
-    gameState.setBattleLog((prev) => [
-      ...prev,
-      `${gameState.currentEnemy!.name} нанес вам ${attackResult.damage} урона!`,
-    ]);
+    const damageText = gameState.gameSettings.godMode
+      ? `${gameState.currentEnemy!.name} пытался нанести ${attackResult.damage} урона, но вы НЕУЯЗВИМЫ! 🛡️✨`
+      : `${gameState.currentEnemy!.name} нанес вам ${attackResult.damage} урона!`;
+
+    gameState.setBattleLog((prev) => [...prev, damageText]);
 
     if (attackResult.isPlayerDefeated) {
       gameState.setBattleLog((prev) => [...prev, "Вы погибли! Игра окончена."]);

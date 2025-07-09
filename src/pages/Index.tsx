@@ -30,9 +30,11 @@ const Index = () => {
         currentEnemy={game.currentEnemy}
         dungeonLevel={game.dungeonLevel}
         battleLog={game.battleLog}
+        isGodMode={game.gameSettings.godMode}
         onPlayerAttack={game.handlePlayerAttack}
         onChainLightning={game.handleChainLightning}
         onRestart={game.handleRestart}
+        onToggleGodMode={game.toggleGodMode}
       />
     );
   }

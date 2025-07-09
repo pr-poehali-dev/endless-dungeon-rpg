@@ -77,26 +77,39 @@ export const useCombat = () => {
     };
   };
 
-  const performEnemyAttack = (enemy: Enemy, player: Player) => {
+  const performEnemyAttack = (
+    enemy: Enemy,
+    player: Player,
+    godMode = false,
+  ) => {
     const damage = calculateDamage(enemy, player, 4);
-    const newPlayerHealth = Math.max(0, player.health - damage);
+    const newPlayerHealth = godMode
+      ? player.health
+      : Math.max(0, player.health - damage);
 
     return {
       damage,
       newPlayerHealth,
-      isPlayerDefeated: newPlayerHealth <= 0,
+      isPlayerDefeated: !godMode && newPlayerHealth <= 0,
     };
   };
 
-  const performChainLightning = (player: Player, enemy: Enemy) => {
-    if (player.mana < GAME_CONSTANTS.CHAIN_LIGHTNING_COST) {
+  const performChainLightning = (
+    player: Player,
+    enemy: Enemy,
+    godMode = false,
+  ) => {
+    if (!godMode && player.mana < GAME_CONSTANTS.CHAIN_LIGHTNING_COST) {
       return null;
     }
 
-    const damage =
-      Math.floor(player.magicPower * 1.5) + Math.floor(Math.random() * 10);
+    const damage = godMode
+      ? GAME_CONSTANTS.GOD_MODE_LIGHTNING_DAMAGE
+      : Math.floor(player.magicPower * 1.5) + Math.floor(Math.random() * 10);
     const newEnemyHealth = Math.max(0, enemy.health - damage);
-    const newMana = player.mana - GAME_CONSTANTS.CHAIN_LIGHTNING_COST;
+    const newMana = godMode
+      ? player.mana
+      : player.mana - GAME_CONSTANTS.CHAIN_LIGHTNING_COST;
 
     return {
       damage,
